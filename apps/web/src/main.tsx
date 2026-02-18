@@ -1,24 +1,18 @@
+import { Hemicycle } from "@repo/ui";
 import { createRoot } from "react-dom/client";
 import "./style.css";
-import typescriptLogo from "/typescript.svg";
-import { Header, Counter } from "@repo/ui";
 
 const App = () => (
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" className="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img
-        src={typescriptLogo}
-        className="logo vanilla"
-        alt="TypeScript logo"
-      />
-    </a>
-    <Header title="Web" />
-    <div className="card">
-      <Counter />
-    </div>
+    <Hemicycle
+      rows={13}
+      data={[]}
+      innerRadius={40}
+      outerRadius={200}
+      totalAngle={200}
+      // rowMargin={3}
+      totalSeats={500}
+    />
   </div>
 );
 

@@ -1,6 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "lib": [
+      "ES2024",
+      "DOM"
+    ],
     "composite": false,
     "declaration": true,
     "declarationMap": true,
@@ -16,5 +20,7 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
