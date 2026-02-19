@@ -1,4 +1,4 @@
-import { polar } from "./helpers";
+import { polar } from "../../../technical/polar";
 
 interface ComputeViewBoxParams {
   outerRadius: number;

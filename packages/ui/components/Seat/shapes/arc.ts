@@ -1,20 +1,12 @@
-export function polar(r: number, angleRad: number) {
-  return { x: r * Math.cos(angleRad), y: r * Math.sin(angleRad) };
-}
+import { polar } from "../../../technical/polar";
+import { SeatPathGenerator } from "./type";
 
-type SectorPathParams = {
-  innerR: number;
-  outerR: number;
-  angle1Rad: number;
-  angle2Rad: number;
-};
-
-export function sectorPath({
+export const sectorPath: SeatPathGenerator = ({
   innerR,
   outerR,
   angle1Rad,
   angle2Rad,
-}: SectorPathParams): string {
+}): string => {
   const i1 = polar(innerR, angle1Rad);
   const i2 = polar(innerR, angle2Rad);
   const o1 = polar(outerR, angle1Rad);
@@ -29,4 +21,4 @@ export function sectorPath({
     `A ${outerR} ${outerR} 0 ${largeArc} ${1 - sweep} ${o1.x} ${o1.y}`,
     "Z",
   ].join(" ");
-}
+};

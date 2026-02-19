@@ -1,7 +1,6 @@
-import { sectorPath } from "./helpers";
-import { ManualSeatProps, TotalSeatsProps } from "./HemicycleProps";
-import { Seat } from "./Seat";
-import { HemicycleData, isHemicycleDataWithCoordinates } from "./types";
+import { SeatLayout } from "../../Seat/types";
+import { ManualSeatProps, TotalSeatsProps } from "../HemicycleProps";
+import { HemicycleData, isHemicycleDataWithCoordinates } from "../types";
 
 interface GenerateSeatsParams {
   rawData: HemicycleData[];
@@ -14,9 +13,10 @@ interface GenerateSeatsParams {
   effectiveRowMargin: number;
   isTotalSeatsMode: boolean;
   modeProps: ManualSeatProps | TotalSeatsProps;
+  angleOffset: number;
 }
 
-export function generateSeats({
+export function generateSeatLayout({
   rawData,
   rows,
   innerRadius,
@@ -27,10 +27,12 @@ export function generateSeats({
   effectiveRowMargin,
   isTotalSeatsMode,
   modeProps,
-}: GenerateSeatsParams): Seat[] {
-  const seats: Seat[] = [];
+  angleOffset,
+}: GenerateSeatsParams): SeatLayout[] {
+  const layout: SeatLayout[] = [];
   let globalIdx = 0;
-  const arcStart = Math.PI + (Math.PI - totalAngleRad) / 2;
+  const arcStart =
+    Math.PI + (Math.PI - totalAngleRad) / 2 + (angleOffset * Math.PI) / 180;
 
   const dataMap = new Map(
     rawData.map((d) => [
@@ -68,18 +70,18 @@ export function generateSeats({
         dataMap.get(`${globalIdx}`) ??
         {};
 
-      seats.push({
-        ...seatData,
+      layout.push({
         idx: globalIdx++,
-        path: sectorPath({
-          innerR: bandInnerR,
-          outerR: effectiveOuterR,
-          angle1Rad: a1,
-          angle2Rad: a2,
-        }),
+        rowIndex,
+        seatIndex,
+        innerR: bandInnerR,
+        outerR: effectiveOuterR,
+        angle1Rad: a1,
+        angle2Rad: a2,
+        data: seatData,
       });
     }
   }
 
-  return seats;
+  return layout;
 }

@@ -1,4 +1,10 @@
+import { SeatShape } from "../Seat/types";
 import { HemicycleData } from "./types";
+
+export type SeatConfig = {
+  /** The shape of the seat (default: "arc"). */
+  shape?: SeatShape;
+};
 
 /**
  * Core configuration shared by all hemicycle modes.
@@ -25,8 +31,14 @@ export type HemicycleBaseProps = {
   /** Total angular span in degrees (default: 180). */
   totalAngle?: number;
 
+  /** Optional global angle offset for the entire layout in degrees (default: 0). */
+  angleOffset?: number;
+
   /** Radial spacing between rows in linear units; falls back to seatMargin or 1. */
   rowMargin?: number;
+
+  /** Optional configuration for seat appearance and shape. */
+  seatConfig?: SeatConfig;
 };
 
 /**

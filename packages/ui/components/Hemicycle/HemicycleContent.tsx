@@ -1,24 +1,31 @@
 import { useMemo } from "react";
-import { generateSeats } from "./generateSeats";
+import { SeatRenderer } from "../Seat/Seat";
+import { DEFAULT_HEMICYCLE_BASE_PROPS } from "./constant";
 import {
   HemicycleProps,
   ManualSeatProps,
   TotalSeatsProps,
 } from "./HemicycleProps";
-import { Seat, SeatRenderer } from "./Seat";
-import { distributeSeats, distributeSeatsFromTotal } from "./seatDistribution";
+import { generateSeatLayout } from "./services/generateSeatLayout";
+import {
+  distributeSeats,
+  distributeSeatsFromTotal,
+} from "./services/seatDistribution";
 
 type HemicycleContentProps = HemicycleProps;
 
-export const HemicycleContent: React.FC<HemicycleContentProps> = ({
-  rows,
-  innerRadius = 40,
-  outerRadius = 95,
-  totalAngle = 180,
-  data: rawData = [],
-  rowMargin,
-  ...modeProps
-}) => {
+export const HemicycleContent: React.FC<HemicycleContentProps> = (props) => {
+  const {
+    rows,
+    innerRadius,
+    outerRadius,
+    totalAngle,
+    angleOffset,
+    data: rawData,
+    rowMargin,
+    ...modeProps
+  } = { ...DEFAULT_HEMICYCLE_BASE_PROPS, ...props };
+
   const totalAngleRad = (totalAngle * Math.PI) / 180;
   const radialStep = (outerRadius - innerRadius) / rows;
 
@@ -62,9 +69,9 @@ export const HemicycleContent: React.FC<HemicycleContentProps> = ({
     effectiveRowMargin,
   ]);
 
-  const data: Seat[] = useMemo(
+  const data = useMemo(
     () =>
-      generateSeats({
+      generateSeatLayout({
         rawData,
         rows,
         innerRadius,
@@ -75,6 +82,7 @@ export const HemicycleContent: React.FC<HemicycleContentProps> = ({
         effectiveRowMargin,
         isTotalSeatsMode,
         modeProps,
+        angleOffset,
       }),
     [
       rawData,
@@ -93,7 +101,11 @@ export const HemicycleContent: React.FC<HemicycleContentProps> = ({
   return (
     <>
       {data.map((seat) => (
-        <SeatRenderer key={seat.idx} seat={seat} />
+        <SeatRenderer
+          key={seat.idx}
+          seat={seat}
+          {...(modeProps?.seatConfig ?? {})}
+        />
       ))}
     </>
   );

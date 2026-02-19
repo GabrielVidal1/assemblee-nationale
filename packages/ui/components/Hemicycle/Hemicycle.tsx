@@ -1,15 +1,20 @@
 import { useMemo } from "react";
+import { DEFAULT_HEMICYCLE_BASE_PROPS } from "./constant";
 import { HemicycleContent } from "./HemicycleContent";
 import { HemicycleProps } from "./HemicycleProps";
-import { computeViewBox } from "./viewbox";
+import { HemicycleWithAisles } from "./HemicycleWithAisles";
+import { computeViewBox } from "./services/viewbox";
 
-export const Hemicycle: React.FC<HemicycleProps> = ({
-  outerRadius = 95,
-  totalAngle = 180,
-  width,
-  height,
-  ...contentProps
-}) => {
+type HemicycleType = React.FC<HemicycleProps> & {
+  WithAisles: typeof HemicycleWithAisles;
+};
+
+const Hemicycle: HemicycleType = (props) => {
+  const { outerRadius, totalAngle, width, height, ...contentProps } = {
+    ...DEFAULT_HEMICYCLE_BASE_PROPS,
+    ...props,
+  };
+
   const totalAngleRad = (totalAngle * Math.PI) / 180;
 
   const viewBox = useMemo(
@@ -32,3 +37,7 @@ export const Hemicycle: React.FC<HemicycleProps> = ({
     </svg>
   );
 };
+
+Hemicycle.WithAisles = HemicycleWithAisles;
+
+export { Hemicycle };
