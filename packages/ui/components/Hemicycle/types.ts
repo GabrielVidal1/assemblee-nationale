@@ -1,7 +1,10 @@
 export type HemicycleData = {
   id: number;
   enabled: boolean;
-  idx?: number;
-  x: number;
-  y: number;
+} & ({ x: number; y: number } | { idx: number });
+
+export const isHemicycleDataWithCoordinates = (
+  data: HemicycleData,
+): data is HemicycleData & { x: number; y: number } => {
+  return "x" in data && "y" in data;
 };

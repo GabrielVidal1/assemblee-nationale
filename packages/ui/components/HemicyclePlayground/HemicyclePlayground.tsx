@@ -1,26 +1,9 @@
 import React, { useMemo, useState } from "react";
-import { Hemicycle } from "./Hemicycle";
-import { distributeSeats } from "./helpers";
+import { Hemicycle } from "../Hemicycle/Hemicycle";
+import { HemicycleData } from "../Hemicycle/types";
+import { mulberry32 } from "./mulberry32";
 
 type Mode = "totalSeats" | "manual";
-
-type SeatData = {
-  id: number;
-  enabled: boolean;
-  x: number;
-  y: number;
-};
-
-function mulberry32(seed: number) {
-  let a = seed | 0;
-  return function () {
-    a |= 0;
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 export const HemicyclePlayground: React.FC = () => {
   // Layout
@@ -42,70 +25,15 @@ export const HemicyclePlayground: React.FC = () => {
   const [fillPercent, setFillPercent] = useState(70);
   const [seed, setSeed] = useState(1);
 
-  const totalAngleRad = (totalAngle * Math.PI) / 180;
-  const radialStep = (outerRadius - innerRadius) / rows;
-
-  const seatsPerRow = useMemo(() => {
-    const seatMarginLinear = mode === "totalSeats" ? 1 : (seatMargin ?? 1);
-
-    const effectiveRowMargin = rowMargin ?? seatMarginLinear;
-
-    if (mode === "totalSeats") {
-      return distributeSeats(
-        totalSeats,
-        rows,
-        innerRadius,
-        radialStep,
-        effectiveRowMargin,
-      );
-    }
-
-    return Array.from({ length: rows }, (_, rowIndex) => {
-      const rowInnerR = innerRadius + rowIndex * radialStep;
-      const rowOuterR = rowInnerR + radialStep;
-
-      const bandInnerR = rowInnerR + effectiveRowMargin / 2;
-      const bandOuterR = rowOuterR - effectiveRowMargin / 2;
-      const midR = (bandInnerR + bandOuterR) / 2;
-
-      const seatMarginRad = seatMarginLinear / midR;
-      const naturalSeatAngle = (radialStep - effectiveRowMargin) / midR;
-      const slotAngle = naturalSeatAngle + seatMarginRad;
-
-      return Math.max(1, Math.round(totalAngleRad / slotAngle));
-    });
-  }, [
-    mode,
-    totalSeats,
-    rows,
-    innerRadius,
-    radialStep,
-    totalAngleRad,
-    seatMargin,
-    rowMargin,
-  ]);
-
-  const data: SeatData[] = useMemo(() => {
+  const data: HemicycleData[] = useMemo(() => {
     const rng = mulberry32(seed);
     const enabledP = fillPercent / 100;
 
-    const result: SeatData[] = [];
-    let id = 1;
-
-    for (let row = 0; row < rows; row++) {
-      const count = seatsPerRow[row] ?? 0;
-      for (let seat = 0; seat < count; seat++) {
-        result.push({
-          id: id++,
-          x: seat,
-          y: row,
-          enabled: rng() < enabledP,
-        });
-      }
-    }
-
-    return result;
-  }, [rows, seatsPerRow, fillPercent, seed]);
+    return new Array(totalSeats).fill(0).map((_, idx) => {
+      const enabled = rng() < enabledP;
+      return { id: idx, idx: idx + 1, enabled };
+    });
+  }, [rows, fillPercent, seed, totalSeats]);
 
   return (
     <div style={{ display: "flex", gap: 32 }}>
