@@ -1,5 +1,5 @@
-import { HemicycleWithAislesPlayground } from "@repo/ui";
 import { createRoot } from "react-dom/client";
+import { HemicycleWithAislesPlayground } from "./components/HemicycleWithAislesPlayground";
 import "./style.css";
 
 const App = () => (

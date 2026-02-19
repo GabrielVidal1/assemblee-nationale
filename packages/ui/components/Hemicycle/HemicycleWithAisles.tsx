@@ -1,9 +1,8 @@
 // path: packages/ui/components/Hemicycle/HemicycleWithAisles.tsx
 import { useMemo } from "react";
-import {
-  DEFAULT_HEMICYCLE_BASE_PROPS,
-  DEFAULT_HEMICYCLE_WITH_AISLES_PROPS,
-} from "./constant";
+import { merge } from "../../technical/merge";
+import { DEFAULT_HEMICYCLE_PROPS } from "./constant";
+import { Hemicycle } from "./Hemicycle";
 import { HemicycleContent } from "./HemicycleContent";
 import { HemicycleProps } from "./HemicycleProps";
 import { computeViewBox } from "./services/viewbox";
@@ -84,11 +83,7 @@ export const HemicycleWithAisles: React.FC<HemicycleWithAislesProps> = (
     data: rawData,
     angleOffset,
     ...contentProps
-  } = {
-    ...DEFAULT_HEMICYCLE_BASE_PROPS,
-    ...DEFAULT_HEMICYCLE_WITH_AISLES_PROPS,
-    ...props,
-  };
+  } = merge({}, DEFAULT_HEMICYCLE_PROPS, props);
 
   const clampedAisleNumber = Math.max(1, aisleNumber);
   const sectionCount = clampedAisleNumber + 1;
@@ -158,6 +153,11 @@ export const HemicycleWithAisles: React.FC<HemicycleWithAislesProps> = (
     if (totalSeatsValue == null) return null;
     return seatsPerSection as number[];
   }, [totalSeatsValue, seatsPerSection]);
+
+  if (aisleNumber === 0) {
+    // Fallback to regular hemicycle if no aisles
+    return <Hemicycle {...props} />;
+  }
 
   return (
     <svg

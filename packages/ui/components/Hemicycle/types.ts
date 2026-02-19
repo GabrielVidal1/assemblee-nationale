@@ -1,31 +1,24 @@
-import { SeatShape } from "../Seat/types";
+export type HemicycleDataBase<T extends object> = {
+  id: string | number;
+} & T;
 
-export type HemicycleDataBase = {
-  id: number;
-
-  /** Whether the seat is enabled (default: true). */
-  enabled: boolean;
-
-  /** Optional shape override for this seat. */
-  shape?: SeatShape;
-}; //& ({ x: number; y: number } | { idx: number });
-
-type HemicycleDataWithCoordinates = HemicycleDataBase & {
+type HemicycleDataWithCoordinates<T extends object> = HemicycleDataBase<T> & {
   x: number;
   y: number;
   idx?: never;
 };
-type HemicycleDataWithIndex = HemicycleDataBase & {
+
+type HemicycleDataWithIndex<T extends object> = HemicycleDataBase<T> & {
   /** Index of the seat in the layout (required if no coordinates). */
   idx: number;
 };
 
-export type HemicycleData =
-  | HemicycleDataWithCoordinates
-  | HemicycleDataWithIndex;
+export type HemicycleData<T extends object = object> =
+  | HemicycleDataWithCoordinates<T>
+  | HemicycleDataWithIndex<T>;
 
-export const isHemicycleDataWithCoordinates = (
-  data: HemicycleData,
-): data is HemicycleData & { x: number; y: number } => {
+export const isHemicycleDataWithCoordinates = <T extends object>(
+  data: HemicycleData<T>,
+): data is HemicycleDataWithCoordinates<T> => {
   return "x" in data && "y" in data;
 };

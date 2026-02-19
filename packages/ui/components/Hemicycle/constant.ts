@@ -1,5 +1,5 @@
 import { DEFAULT_SEAT_CONFIG } from "../Seat/constant";
-import { HemicycleBaseProps, TotalSeatsProps } from "./HemicycleProps";
+import { HemicycleProps } from "./HemicycleProps";
 import { HemicycleWithAislesProps } from "./HemicycleWithAisles";
 
 /**
@@ -7,7 +7,8 @@ import { HemicycleWithAislesProps } from "./HemicycleWithAisles";
  */
 export const DEFAULT_HEMICYCLE_BASE_PROPS: Required<
   Pick<
-    HemicycleBaseProps,
+    HemicycleProps,
+    | "totalSeats"
     | "data"
     | "rows"
     | "innerRadius"
@@ -28,14 +29,6 @@ export const DEFAULT_HEMICYCLE_BASE_PROPS: Required<
   totalAngle: 180,
   angleOffset: 0,
   rowMargin: 1,
-};
-
-/**
- * Default values for totalSeats distribution mode.
- */
-export const DEFAULT_TOTAL_SEATS_PROPS: Required<
-  Pick<TotalSeatsProps, "totalSeats">
-> = {
   totalSeats: 100,
 };
 
@@ -48,7 +41,6 @@ export const DEFAULT_HEMICYCLE_WITH_AISLES_PROPS: Required<
 
 export const DEFAULT_HEMICYCLE_PROPS = {
   ...DEFAULT_HEMICYCLE_BASE_PROPS,
-  ...DEFAULT_TOTAL_SEATS_PROPS,
   ...DEFAULT_HEMICYCLE_WITH_AISLES_PROPS,
   seatConfig: DEFAULT_SEAT_CONFIG,
 };

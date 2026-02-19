@@ -1,8 +1,12 @@
-import { SeatConfig } from "../Hemicycle/HemicycleProps";
+import { SeatConfig } from "./types";
 
 /**
  * Default configuration for seat appearance.
  */
 export const DEFAULT_SEAT_CONFIG: Required<SeatConfig> = {
   shape: "arc",
+  seatMargin: 1,
+  wrapper: (content) => content,
+  color: "#ccc",
+  props: {},
 };

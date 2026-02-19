@@ -1,36 +1,38 @@
 import { useMemo } from "react";
-import { HemicycleData } from "../Hemicycle/types";
+import { merge } from "../../technical";
 import { seatPathGenerators } from "./shapes";
-import { SeatLayout, SeatShape } from "./types";
+import { SeatConfig, SeatData, SeatShape } from "./types";
 
-interface SeatRendererProps {
-  seat: Partial<HemicycleData> & SeatLayout;
-  shape?: SeatShape;
-}
+type SeatRendererProp<T extends object> = SeatConfig<T> & SeatData<T>;
 
-export const SeatRenderer: React.FC<SeatRendererProps> = ({
-  seat,
-  shape: propShape,
-}) => {
+export const SeatRenderer = <T extends object>(props: SeatRendererProp<T>) => {
+  const {
+    idx,
+    data,
+    color,
+    wrapper,
+    shape,
+    props: svgProps,
+    ...seatLayout
+  } = merge({}, props);
+
   const path = useMemo(() => {
-    const { shape, innerR, outerR, angle1Rad, angle2Rad } = seat;
-    const finalShape: SeatShape = shape ?? propShape ?? "arc";
-    return seatPathGenerators[finalShape]({
-      innerR,
-      outerR,
-      angle1Rad,
-      angle2Rad,
-    });
-  }, [seat, propShape]);
+    const finalShape: SeatShape = shape ?? shape ?? "arc";
+    return seatPathGenerators[finalShape](seatLayout);
+  }, [shape, seatLayout]);
 
-  return (
+  const seatWrapper = wrapper ?? ((a: React.ReactNode) => a);
+
+  return seatWrapper(
     <path
+      key={idx}
       d={path}
-      fill={seat.enabled ? "#2563eb" : "#e2e8f0"}
-      stroke="#fff"
-      strokeWidth={0.8}
-      strokeLinejoin="round"
-      style={{ transition: "fill 0.2s" }}
-    />
+      fill={color}
+      style={{
+        pointerEvents: "auto",
+      }}
+      {...svgProps}
+    />,
+    data,
   );
 };

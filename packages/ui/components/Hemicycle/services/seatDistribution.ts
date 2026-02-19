@@ -36,36 +36,3 @@ export function distributeSeatsFromTotal({
 
   return floored.map((n) => Math.max(n, 1));
 }
-
-type DistributeSeatsParams = BaseRadialSeatingParams & {
-  totalAngleRad: number;
-  seatMarginLinear: number;
-};
-
-export function distributeSeats({
-  rows,
-  innerRadius,
-  radialStep,
-  totalAngleRad,
-  seatMarginLinear,
-  effectiveRowMargin,
-}: DistributeSeatsParams): number[] {
-  return Array.from({ length: rows }, (_, rowIndex) => {
-    const rowInnerR = innerRadius + rowIndex * radialStep;
-    const rowOuterR = rowInnerR + radialStep;
-
-    const bandInnerR = rowInnerR + effectiveRowMargin / 2;
-    const bandOuterR = rowOuterR - effectiveRowMargin / 2;
-    const midR = (bandInnerR + bandOuterR) / 2;
-
-    // Convert constant linear gap to angular gap at this radius
-    const seatMarginRad = seatMarginLinear / midR;
-
-    // Square-ish seat: angular size equals radial height at this radius
-    const naturalSeatAngle = (radialStep - effectiveRowMargin) / midR;
-
-    const slotAngle = naturalSeatAngle + seatMarginRad;
-
-    return Math.max(1, Math.round(totalAngleRad / slotAngle));
-  });
-}

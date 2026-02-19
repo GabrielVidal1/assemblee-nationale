@@ -1,20 +1,15 @@
-import { SeatShape } from "../Seat/types";
+import { SeatConfig } from "../Seat/types";
 import { HemicycleData } from "./types";
-
-export type SeatConfig = {
-  /** The shape of the seat (default: "arc"). */
-  shape?: SeatShape;
-};
 
 /**
  * Core configuration shared by all hemicycle modes.
  */
-export type HemicycleBaseProps = {
+export type HemicycleProps<T extends object = object> = {
   /** Number of concentric seating rows (required). */
   rows: number;
 
   /** Array of seat data objects used to populate and style individual seats (required). */
-  data: HemicycleData[];
+  data: HemicycleData<T>[];
 
   /** Inner radius of the hemicycle in SVG units (default: 40). */
   innerRadius?: number;
@@ -38,45 +33,8 @@ export type HemicycleBaseProps = {
   rowMargin?: number;
 
   /** Optional configuration for seat appearance and shape. */
-  seatConfig?: SeatConfig;
-};
+  seatConfig?: SeatConfig<T>;
 
-/**
- * Manual seat sizing and spacing mode.
- */
-export type ManualSeatProps = {
-  /** Width of each seat in SVG units (no default; layout-derived if omitted). */
-  seatWidth?: number;
-
-  /** Height of each seat in SVG units (no default; layout-derived if omitted). */
-  seatHeight?: number;
-
-  /** Linear spacing between seats along the arc (default: 1). */
-  seatMargin?: number;
-
-  /** Disallowed in manual mode. */
-  totalSeats?: never;
-};
-
-/**
- * Automatic seat distribution mode based on a total seat count.
- */
-export type TotalSeatsProps = {
   /** Total number of seats to distribute across rows (default: 100). */
   totalSeats?: number;
-
-  /** Disallowed in totalSeats mode. */
-  seatWidth?: never;
-
-  /** Disallowed in totalSeats mode. */
-  seatHeight?: never;
-
-  /** Disallowed in totalSeats mode. */
-  seatMargin?: never;
 };
-
-/**
- * Complete hemicycle props: base configuration plus exactly one sizing mode.
- */
-export type HemicycleProps = HemicycleBaseProps &
-  (ManualSeatProps | TotalSeatsProps);

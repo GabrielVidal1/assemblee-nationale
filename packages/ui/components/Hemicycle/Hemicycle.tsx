@@ -5,11 +5,11 @@ import { HemicycleProps } from "./HemicycleProps";
 import { HemicycleWithAisles } from "./HemicycleWithAisles";
 import { computeViewBox } from "./services/viewbox";
 
-type HemicycleType = React.FC<HemicycleProps> & {
+type HemicycleType<T extends object> = React.FC<HemicycleProps<T>> & {
   WithAisles: typeof HemicycleWithAisles;
 };
 
-const Hemicycle: HemicycleType = (props) => {
+const Hemicycle: HemicycleType<object> = (props) => {
   const { outerRadius, totalAngle, width, height, ...contentProps } = {
     ...DEFAULT_HEMICYCLE_BASE_PROPS,
     ...props,
