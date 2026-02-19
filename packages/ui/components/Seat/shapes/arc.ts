@@ -5,7 +5,7 @@ export const sectorPath: SeatPathGenerator = ({
   outerR,
   angle1Rad,
   angle2Rad,
-  cornerRadius = 6,
+  borderRadius: cornerRadius = 6,
 }): string => {
   const a1 = angle1Rad;
   const a2 = angle2Rad;

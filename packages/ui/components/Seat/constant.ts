@@ -9,4 +9,5 @@ export const DEFAULT_SEAT_CONFIG: Required<SeatConfig> = {
   wrapper: (content) => content,
   color: "#ccc",
   props: {},
+  borderRadius: 1.5,
 };

@@ -36,7 +36,7 @@ function partitionDataBySections(
   );
 
   // Cumulative seat offsets per section
-  const offsets = seatsPerSection.reduce<number[]>((acc, count, i) => {
+  const offsets = seatsPerSection.reduce<number[]>((acc, _count, i) => {
     acc.push(i === 0 ? 0 : acc[i - 1] + seatsPerSection[i - 1]);
     return acc;
   }, []);

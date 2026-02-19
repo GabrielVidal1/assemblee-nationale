@@ -5,7 +5,7 @@ export type SeatPathParams = {
   angle2Rad: number;
 
   // Optional corner radius for arc and rectangular seats (ignored for circular seats).
-  cornerRadius?: number;
+  borderRadius?: number;
 };
 
 export type SeatPathGenerator = (params: SeatPathParams) => string;

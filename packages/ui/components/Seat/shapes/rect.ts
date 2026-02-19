@@ -5,7 +5,7 @@ export const rectangularSeatPath: SeatPathGenerator = ({
   outerR,
   angle1Rad,
   angle2Rad,
-  cornerRadius = 1,
+  borderRadius: cornerRadius = 1,
 }) => {
   const midAngle = (angle1Rad + angle2Rad) / 2;
   const r = (innerR + outerR) / 2;

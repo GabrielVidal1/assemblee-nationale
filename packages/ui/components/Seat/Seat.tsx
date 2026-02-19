@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { seatPathGenerators } from "./shapes";
-import { SeatConfig, SeatData, SeatShape } from "./types";
+import { SeatConfig, SeatData } from "./types";
 
 type SeatRendererProp<T extends object> = SeatConfig<T> & SeatData<T>;
 
@@ -15,19 +15,18 @@ export const SeatRenderer = <T extends object>(data: SeatRendererProp<T>) => {
     angle2Rad,
     innerR,
     outerR,
-    borderRadius: roundedness,
+    borderRadius,
   } = data;
 
   const path = useMemo(() => {
-    const finalShape: SeatShape = shape ?? shape ?? "arc";
-    return seatPathGenerators[finalShape]({
+    return seatPathGenerators[shape ?? "arc"]({
       innerR,
       outerR,
       angle1Rad,
       angle2Rad,
-      cornerRadius: roundedness,
+      borderRadius,
     });
-  }, [shape, innerR, outerR, angle1Rad, angle2Rad, roundedness]);
+  }, [shape, innerR, outerR, angle1Rad, angle2Rad, borderRadius]);
 
   const seatWrapper = wrapper ?? ((a: React.ReactNode) => a);
 
