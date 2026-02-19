@@ -1,0 +1,9 @@
+{
+  "label": "Hemicycle",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Hymicycle react components for the Assemblée Nationale hemicycle visualization.",
+    "slug": "/hemicycle"
+  }
+}

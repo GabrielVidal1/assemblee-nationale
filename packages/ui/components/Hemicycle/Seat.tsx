@@ -1,3 +1,5 @@
+import { HemicycleData } from "./types";
+
 export type Seat = Partial<HemicycleData> & {
   idx: number;
   path: string;

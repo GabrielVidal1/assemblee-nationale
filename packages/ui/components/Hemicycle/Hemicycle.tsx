@@ -35,7 +35,7 @@ export const Hemicycle: React.FC<HemicycleProps> = ({
   innerRadius = 40,
   outerRadius = 95,
   totalAngle = 180,
-  data: rawData,
+  data: rawData = [],
   height,
   width,
   rowMargin,

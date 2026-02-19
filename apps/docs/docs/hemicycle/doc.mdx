@@ -1,0 +1,376 @@
+---
+sidebar_position: 1
+---
+
+# Documentation
+
+The `Hemicycle` component renders a configurable semicircular (or circular) seating layout. It supports two layout strategies:
+
+- **Automatic distribution** via `totalSeats`
+- **Manual sizing** via `seatMargin` and `seatHeight`
+
+This document describes every prop in detail, including geometry implications and examples.
+
+---
+
+## Basic Usage
+
+```tsx live
+<Hemicycle rows={6} totalSeats={100} />
+```
+
+---
+
+# Layout Parameters
+
+---
+
+## `rows: number`
+
+Number of concentric seating rows.
+
+- **Minimum:** 1
+- Controls radial subdivision between `innerRadius` and `outerRadius`
+- Increasing rows decreases radial step size
+
+### Example
+
+```tsx live
+<Hemicycle
+  rows={10}
+  innerRadius={40}
+  outerRadius={120}
+  totalAngle={180}
+  rowMargin={2}
+  totalSeats={200}
+/>
+```
+
+Use higher row counts for dense parliamentary-style layouts.
+
+---
+
+## `innerRadius: number`
+
+Inner radius of the hemicycle (distance from center to first row).
+
+- Defines empty central space
+- Increasing it pushes seating outward
+
+### Example
+
+```tsx live
+<Hemicycle
+  rows={6}
+  innerRadius={80}
+  outerRadius={150}
+  totalAngle={180}
+  rowMargin={2}
+  totalSeats={180}
+/>
+```
+
+Use larger inner radii for stage, podium, or focal point spacing.
+
+---
+
+## `outerRadius: number`
+
+Outer boundary radius of the hemicycle.
+
+- Determines total radial thickness
+- Must be greater than `innerRadius`
+
+Radial thickness is:
+
+```
+outerRadius - innerRadius
+```
+
+### Example
+
+```tsx live
+<Hemicycle
+  rows={5}
+  innerRadius={40}
+  outerRadius={200}
+  totalAngle={180}
+  rowMargin={3}
+  totalSeats={150}
+/>
+```
+
+Increasing outer radius increases total seating capacity potential.
+
+---
+
+## `totalAngle: number`
+
+Angular span in **degrees**.
+
+- 180 → semicircle
+- 360 → full circle
+- 90 → quarter circle
+
+### Example: Full Circle
+
+```tsx live
+<Hemicycle
+  rows={6}
+  innerRadius={50}
+  outerRadius={120}
+  totalAngle={360}
+  rowMargin={1}
+  totalSeats={200}
+/>
+```
+
+---
+
+## `rowMargin: number`
+
+Radial spacing between rows.
+
+- Applied between bands
+- Reduces usable radial space
+- Affects seat packing density
+
+### Example
+
+```tsx live
+<Hemicycle
+  rows={6}
+  innerRadius={40}
+  outerRadius={120}
+  totalAngle={180}
+  rowMargin={6}
+  totalSeats={120}
+/>
+```
+
+Use larger margins for visual clarity and separation.
+
+---
+
+# Distribution Modes
+
+The component operates in two mutually exclusive sizing modes.
+
+---
+
+# Mode 1 — Automatic Distribution
+
+Use:
+
+```
+totalSeats
+```
+
+### `totalSeats: number`
+
+Total seat count to distribute across rows.
+
+- Seats are allocated proportionally to arc length
+- Larger outer rows receive more seats
+
+### Example
+
+```tsx live
+<Hemicycle
+  rows={6}
+  innerRadius={40}
+  outerRadius={100}
+  totalAngle={180}
+  rowMargin={1}
+  totalSeats={120}
+/>
+```
+
+### Behavior
+
+- Seats per row are computed via geometric distribution
+- No manual control over seat size
+- Optimized for fitting an exact total
+
+Use this mode for election simulations, capacity planning, or chamber modeling.
+
+---
+
+# Mode 2 — Manual Seat Sizing
+
+Use:
+
+```
+seatMargin
+seatHeight
+```
+
+Do **not** pass `totalSeats` in this mode.
+
+---
+
+## `seatMargin: number`
+
+Angular spacing between seats (linear arc distance).
+
+- Controls spacing along arc
+- Higher value → fewer seats per row
+- Measured relative to radius
+
+### Example
+
+```tsx live
+<Hemicycle
+  rows={6}
+  innerRadius={40}
+  outerRadius={100}
+  totalAngle={180}
+  rowMargin={1}
+  seatMargin={4}
+/>
+```
+
+---
+
+## `seatHeight?: number`
+
+Explicit radial height of each seat.
+
+- Overrides automatic radial band sizing
+- If `undefined`, height derives from row thickness
+- Useful for uniform seat depth
+
+### Example
+
+```tsx live
+<Hemicycle
+  rows={6}
+  innerRadius={40}
+  outerRadius={120}
+  totalAngle={180}
+  rowMargin={2}
+  seatMargin={2}
+  seatHeight={12}
+/>
+```
+
+Use fixed `seatHeight` when visual proportions must remain constant across layout adjustments.
+
+---
+
+# Data Parameter
+
+---
+
+## `data: Array<{ id: number; x: number; y: number; enabled: boolean }>`
+
+Seat metadata.
+
+- `id`: unique identifier
+- `x`: seat index within row
+- `y`: row index
+- `enabled`: visual state toggle
+
+### Example
+
+```tsx live
+const data = [
+  { id: 1, x: 0, y: 0, enabled: true },
+  { id: 2, x: 1, y: 0, enabled: false },
+];
+
+<Hemicycle
+  rows={1}
+  innerRadius={40}
+  outerRadius={60}
+  totalAngle={180}
+  rowMargin={1}
+  totalSeats={2}
+  data={data}
+/>;
+```
+
+This enables simulation scenarios (e.g., occupancy, voting results).
+
+---
+
+# Advanced Examples
+
+---
+
+## Parliament Layout
+
+```tsx live
+<Hemicycle
+  rows={8}
+  innerRadius={60}
+  outerRadius={160}
+  totalAngle={180}
+  rowMargin={2}
+  totalSeats={350}
+/>
+```
+
+---
+
+## Amphitheater
+
+```tsx live
+<Hemicycle
+  rows={12}
+  innerRadius={30}
+  outerRadius={200}
+  totalAngle={220}
+  rowMargin={3}
+  seatMargin={3}
+/>
+```
+
+---
+
+## Minimal Compact Layout
+
+```tsx live
+<Hemicycle
+  rows={3}
+  innerRadius={20}
+  outerRadius={60}
+  totalAngle={120}
+  rowMargin={1}
+  totalSeats={30}
+/>
+```
+
+---
+
+# Parameter Interaction Summary
+
+| Parameter   | Affects                 | Mode           |
+| ----------- | ----------------------- | -------------- |
+| rows        | Radial segmentation     | Both           |
+| innerRadius | Central empty space     | Both           |
+| outerRadius | Total radial span       | Both           |
+| totalAngle  | Arc coverage            | Both           |
+| rowMargin   | Radial separation       | Both           |
+| totalSeats  | Seat count distribution | Automatic only |
+| seatMargin  | Angular spacing         | Manual only    |
+| seatHeight  | Radial seat thickness   | Manual only    |
+| data        | Visual state            | Both           |
+
+---
+
+# Best Practices
+
+- Use **automatic mode** when seat count is fixed.
+- Use **manual mode** when visual spacing control is required.
+- Ensure `outerRadius > innerRadius`.
+- Avoid excessive `rowMargin` relative to radial thickness.
+- Keep `seatHeight` ≤ radial step for consistent geometry.
+
+---
+
+# Conclusion
+
+The `Hemicycle` component provides a geometry-driven seating visualization system with flexible distribution strategies. By controlling radial, angular, and density parameters, it supports modeling use cases ranging from parliamentary chambers to amphitheaters and circular dashboards.
+
+---
