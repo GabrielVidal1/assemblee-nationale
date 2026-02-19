@@ -8,15 +8,5 @@
       "source": "/docs/:path*",
       "destination": "/apps/docs/build/:path*"
     }
-  ],
-  "routes": [
-    {
-      "src": "/docs",
-      "dest": "/apps/docs/build/index.html"
-    },
-    {
-      "src": "/docs/(.*)",
-      "dest": "/apps/docs/build/$1"
-    }
   ]
 }
