@@ -2,7 +2,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:packages": "turbo run dev --filter=\"./packages/*\"",
+    "dev:packages": "turbo run dev --filter=!docs",
+    "dev:docs": "turbo run dev --filter=docs",
     "build": "turbo run build",
     "build-packages": "turbo run build --filter=\"./packages/*\"",
     "test": "vitest",
@@ -28,7 +29,7 @@
   "name": "with-vite-react",
   "packageManager": "yarn@1.22.22",
   "workspaces": [
-    "apps/web",
+    "apps/*",
     "packages/*",
     "configs/*",
     "data/*"

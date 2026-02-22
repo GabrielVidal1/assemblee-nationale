@@ -5,6 +5,7 @@ export const DEFAULT_SEAT_CONFIG: Required<HemicycleConfig["seatConfig"]> = {
   shape: "arc",
   color: "#ccc",
   borderRadius: 1.5,
+  radius: 2,
 };
 
 /**

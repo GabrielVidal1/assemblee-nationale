@@ -8,6 +8,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "build": "tsc",
     "lint": "eslint \"**/*.ts\""
   },
   "dependencies": {

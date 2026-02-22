@@ -3,8 +3,8 @@ import { SeatConfig } from "./seatConfig";
 
 export type HemicycleConfig<SCT extends SeatConfig = SeatConfig> =
   Core.HemicycleConfig & {
-    width: number | string;
-    height: number | string;
+    width: number;
+    height: number;
 
     seatConfig: SCT;
 

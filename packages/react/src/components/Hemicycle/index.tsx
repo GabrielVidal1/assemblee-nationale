@@ -25,7 +25,8 @@ const HemicycleComponent = <T extends object = object>({
     >
       {seatData.map((data, idx) => {
         const { seatConfig } = data;
-        const wrapper = seatConfig.wrapper ?? ((content) => content);
+        const wrapper =
+          seatConfig.wrapper ?? ((content: React.ReactNode) => content);
         return wrapper(
           <path
             key={idx}

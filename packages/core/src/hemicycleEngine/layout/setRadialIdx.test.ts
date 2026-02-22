@@ -24,9 +24,6 @@ function seat(
     x: 0,
     y: 0,
 
-    innerArcLength: 0,
-    outerArcLength: 0,
-
     ...extra,
   };
 }

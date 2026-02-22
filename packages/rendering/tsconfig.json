@@ -8,6 +8,9 @@
   ],
   "compilerOptions": {
     "baseUrl": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
     "paths": {
       "@rendering/*": [
         "./*"
