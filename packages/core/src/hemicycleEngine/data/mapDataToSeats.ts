@@ -7,13 +7,13 @@ interface MapSeatDataParams<T extends object, S extends object = SeatPosition> {
   layout: S[];
   data: HemicycleData<T>[];
 
-  orderBy?: HemicycleConfig["seatConfig"]["orderBy"];
+  orderBy?: HemicycleConfig["orderBy"];
 }
 
 export function mapDataToSeats<T extends object, S extends SeatPosition>({
   layout,
   data,
-  orderBy = DEFAULT_HEMICYCLE_CONFIG.seatConfig.orderBy,
+  orderBy = DEFAULT_HEMICYCLE_CONFIG.orderBy,
 }: MapSeatDataParams<T, S>): SeatData<T, S>[] {
   const dataMap = new Map(
     data.map((d, i) => [

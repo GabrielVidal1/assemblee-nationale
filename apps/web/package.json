@@ -1,5 +1,6 @@
 {
   "name": "web",
+  "types": "module",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +11,7 @@
     "lint": "eslint \"src/**/*.ts\""
   },
   "dependencies": {
-    "@hemicycle/core": "*",
+    "@hemicycle/react": "*",
     "@tailwindcss/vite": "^4.2.0",
     "antd": "^6.3.0",
     "react": "^18.2.0",

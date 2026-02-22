@@ -15,8 +15,11 @@ export type HemicycleDataWithIdx = {
   rowIndex?: never;
 };
 
-export type HemicycleData<T extends object = object> = T &
-  (HemicycleDataWithCoordinates | HemicycleDataWithIdx);
+export type HemicyclePosition =
+  | HemicycleDataWithCoordinates
+  | HemicycleDataWithIdx;
+
+export type HemicycleData<T extends object = object> = T & HemicyclePosition;
 
 /** Combined type for a seat, including both layout, style and associated data. */
 export type SeatData<

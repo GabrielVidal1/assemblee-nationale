@@ -1,5 +1,6 @@
 import { HemicycleArcAisleConfig } from "./arcAislesConfig";
-import { GlobalSeatConfig } from "./seatConfig";
+
+type SeatOrdering = "row" | "radial";
 
 export type HemicycleConfig = HemicycleArcAisleConfig & {
   // BASE CONFIG
@@ -25,13 +26,21 @@ export type HemicycleConfig = HemicycleArcAisleConfig & {
   /** Radial spacing between rows in linear units; falls back to seatMargin or 1. */
   rowMargin: number;
 
-  // MISC CONFIG
-  /** Optional configuration for seat appearance and shape. */
-  seatConfig: GlobalSeatConfig;
-
   /* Optional flag to mirror the layout horizontally (default: false). */
   mirror: boolean;
 
   /** Optional array defining the distribution of seats across rows; if not provided, seats are distributed evenly. */
   seatsPerRow?: number[];
+
+  /** Linear spacing between seats along the arc (default: 1). */
+  seatMargin: number;
+
+  /** Ordering of idx-based seat layout; "row" fills seats sequentially by row, while "radial" fills seats sequentially by distance from the center (default: "row"). */
+  orderBy: SeatOrdering;
+
+  /** Number of angular aisles (gaps) to insert, dividing the hemicycle into (aislesCount + 1) sections. Defaults to 0 (no aisles). */
+  aislesCount: number;
+
+  /** Width of each angular aisle. Required when aislesCount > 0. Defaults to 2. */
+  aislesWidth: number;
 };

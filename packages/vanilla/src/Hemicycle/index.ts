@@ -1,59 +1,82 @@
-import { HemicycleData, HemicycleEngine, SeatData } from "@hemicycle/core";
-import { merge, pick } from "@hemicycle/helpers";
+import * as Core from "@hemicycle/core";
+import { merge } from "@hemicycle/helpers";
 import { computeViewBox, svgPathGenerators } from "@hemicycle/rendering";
 import { HemicycleConfig } from "./config";
-import { DEFAULT_HEMICYCLE_CONFIG } from "./config/defaultConfig";
-import { SEAT_CONFIG_FIELDS, SeatConfig } from "./config/seatConfig";
+import {
+  DEFAULT_HEMICYCLE_CONFIG,
+  DEFAULT_SEAT_CONFIG,
+} from "./config/defaultConfig";
+import { ComputedSeatConfig, SeatConfig } from "./config/seatConfig";
 import { validateConfig } from "./config/validateConfig";
-import { DataWithConfig } from "./data/types";
+import {
+  ComputedSeatData,
+  HemicycleData,
+  HemicycleEngine,
+  WithSeatConfig,
+} from "./types";
 
-export class Hemicycle<T extends object = object> {
-  private config: HemicycleConfig = DEFAULT_HEMICYCLE_CONFIG;
+export class Hemicycle<
+  T extends object = object,
+  SCT extends SeatConfig = SeatConfig,
+> {
+  private config: HemicycleConfig<SCT> =
+    DEFAULT_HEMICYCLE_CONFIG as HemicycleConfig<SCT>;
 
-  private engine: HemicycleEngine<DataWithConfig<T>> | null = null;
+  private engine: HemicycleEngine<T, SCT> | null = null;
 
   private svg: SVGSVGElement | null = null;
 
-  constructor(config: Partial<HemicycleConfig>) {
-    this.engine = new HemicycleEngine<DataWithConfig<T>>(config);
+  private computedSeatData: ComputedSeatData<T, SCT>[] = [];
+
+  constructor(config: Partial<HemicycleConfig<SCT>>) {
+    this.engine = new Core.Hemicycle<WithSeatConfig<T, SCT>>(config);
     this.updateConfig(config);
   }
 
-  getEngine(): HemicycleEngine<DataWithConfig<T>> {
+  getEngine(): HemicycleEngine<T, SCT> {
     if (!this.engine) {
       throw new Error("Hemicycle engine not initialized.");
     }
     return this.engine;
   }
 
-  updateConfig(config: Partial<HemicycleConfig>) {
+  updateConfig(config: Partial<HemicycleConfig<SCT>>) {
     this.config = merge({}, this.config, config);
     validateConfig(this.config);
     this.getEngine().updateConfig(config);
   }
 
-  updateData(data: HemicycleData<DataWithConfig<T>>[]) {
-    this.getEngine().updateData(data);
+  getConfig() {
+    return this.config;
   }
 
-  getSeatData() {
-    const seatData = this.getEngine().getSeatData();
-    return seatData.map((seat) => {
-      const seatConfig: SeatConfig = {
+  updateData(data: HemicycleData<T, SCT>[]) {
+    const seatData = this.getEngine().updateData(data);
+    this.computedSeatData = seatData.map((seat) => {
+      const seatConfig = {
+        ...DEFAULT_SEAT_CONFIG,
         ...(this.config.seatConfig ?? {}),
-        ...(seat.data ? pick(seat.data, SEAT_CONFIG_FIELDS) : {}),
+        ...(seat.data?.seatConfig ?? {}),
+        path: "", // will be computed below
       };
+      const path = svgPathGenerators[seatConfig.shape]({
+        ...seat,
+        ...seatConfig,
+      });
 
-      const path = svgPathGenerators[seatConfig.shape ?? "arc"](seat);
-
-      return {
+      const res: ComputedSeatData<T, SCT> = {
         ...seat,
         seatConfig: {
           ...seatConfig,
           path,
-        },
+        } as ComputedSeatConfig<SCT>,
       };
+      return res;
     });
+  }
+
+  getSeatData() {
+    return this.computedSeatData;
   }
 
   getViewBox() {
@@ -70,14 +93,15 @@ export class Hemicycle<T extends object = object> {
   render(svg: SVGSVGElement) {
     this.cleanUp();
     this.svg = svg;
-    const viewBox = this.getViewBox();
 
     const seatsData = this.getSeatData();
 
     // Set viewBox
+    const viewBox = this.getViewBox();
     svg.setAttribute("viewBox", viewBox);
-    svg.setAttribute("width", "100%");
-    svg.setAttribute("height", "100%");
+    const { width, height } = this.config;
+    svg.setAttribute("width", width?.toString() ?? "100%");
+    svg.setAttribute("height", height?.toString() ?? "100%");
 
     // Render seats
     seatsData.forEach((seatData) => {
@@ -91,17 +115,13 @@ export class Hemicycle<T extends object = object> {
 
   private buildSeatSvg({
     seatConfig,
-    ...seatData
-  }: SeatData<DataWithConfig<T>> & { seatConfig: SeatConfig }) {
+  }: ComputedSeatData<T, SCT>): SVGPathElement {
     const seatPath = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "path",
     );
-
-    const path = svgPathGenerators[seatConfig.shape ?? "arc"](seatData);
-    seatPath.setAttribute("d", path);
-
-    seatPath.setAttribute("fill", seatConfig.color ?? "lightgray");
+    seatPath.setAttribute("d", seatConfig.path);
+    seatPath.setAttribute("fill", seatConfig?.color ?? "lightgray");
     return seatPath;
   }
 }

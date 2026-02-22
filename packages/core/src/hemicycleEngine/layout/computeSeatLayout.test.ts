@@ -13,8 +13,8 @@ describe("computeSeatLayout", () => {
     rowMargin: 0,
     angleOffset: 0,
     mirror: false,
+    seatMargin: 2,
     seatConfig: {
-      seatMargin: 2,
       orderBy: "row" as const,
     },
     seatsPerRow: [4, 6],
@@ -68,7 +68,7 @@ describe("computeSeatLayout", () => {
 
     const firstColumn = layout
       .filter((s) => s.seatIndex === 0)
-      .sort((a, b) => a.radialIdx - b.radialIdx);
+      .sort((a, b) => b.radialIdx - a.radialIdx);
 
     expect(firstColumn.map((s) => s.rowIndex)).toEqual([0, 1]);
   });

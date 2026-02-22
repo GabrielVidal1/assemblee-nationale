@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, expect, it } from "vitest";
-import { DataWithConfig } from "./data/types";
 import { Hemicycle } from "./index";
+import { WithSeatConfig } from "./types";
 
 describe("Hemicycle", () => {
   it("initializes engine correctly", () => {
@@ -23,7 +23,7 @@ describe("Hemicycle", () => {
   it("updates data without throwing", () => {
     const hemicycle = new Hemicycle({});
 
-    const data: DataWithConfig<any>[] = [{ id: "A" }];
+    const data: WithSeatConfig<any>[] = [{ id: "A" }];
 
     expect(() => {
       hemicycle.updateData(data);
@@ -40,7 +40,7 @@ describe("Hemicycle", () => {
       },
     });
 
-    const data: DataWithConfig<any>[] = [{ color: "red" }];
+    const data: WithSeatConfig<any>[] = [{ seatConfig: { color: "red" } }];
 
     hemicycle.updateData(data);
 
@@ -67,7 +67,7 @@ describe("Hemicycle", () => {
       hideEmptySeats: true,
     });
 
-    const data: DataWithConfig<any>[] = [{ id: "A" }, { id: "B" }, { id: "C" }];
+    const data: WithSeatConfig<any>[] = [{ id: "A" }, { id: "B" }, { id: "C" }];
 
     hemicycle.updateData(data);
 

@@ -1,32 +1,27 @@
-import { times, toRadians } from "@hemicycle/helpers";
+import { toRadians } from "@hemicycle/helpers";
 import { HemicycleConfig } from "hemicycleEngine/config";
 import { RowBand } from "hemicycleEngine/seatDistribution/computeRowBands";
+import { setRadialIdx } from "./setRadialIdx";
 import { SeatLayout } from "./types";
 
 type ComputeSeatLayoutParams = Pick<
   HemicycleConfig,
-  "totalAngle" | "seatConfig" | "angleOffset" | "mirror" | "rowMargin"
+  "totalAngle" | "seatMargin" | "angleOffset" | "mirror" | "rowMargin"
 > & {
   seatsPerRow: number[];
 };
 
 export function computeSeatLayout(
   rowBands: RowBand[],
-  {
-    seatConfig,
-    seatsPerRow,
-    totalAngle,
-    rowMargin,
-    angleOffset,
-    mirror,
-  }: ComputeSeatLayoutParams,
+  { seatsPerRow, ...config }: ComputeSeatLayoutParams,
 ): SeatLayout[] {
+  const { seatMargin = 1, totalAngle, rowMargin, angleOffset, mirror } = config;
+
   const rows = rowBands.length;
 
   const totalAngleRad = toRadians(totalAngle);
 
-  const seatMargin = seatConfig?.seatMargin ?? 1;
-  const effectiveRowMargin = rowMargin ?? seatConfig?.seatMargin ?? 0;
+  const effectiveRowMargin = rowMargin ?? seatMargin ?? 0;
   const arcStart =
     Math.PI + (Math.PI - totalAngleRad) / 2 + toRadians(angleOffset);
 
@@ -67,7 +62,7 @@ export function computeSeatLayout(
       const x = midR * Math.cos(midAngle);
       const y = midR * Math.sin(midAngle);
 
-      const seat = {
+      const seat: SeatLayout = {
         idx: globalIdx++,
         radialIdx: -1, // temp
         rowIndex,
@@ -85,21 +80,7 @@ export function computeSeatLayout(
     }
   }
 
-  let radialCounter = 0;
-  const maxSeats = Math.max(...seatsPerRow);
-
-  const rowOrder = mirror
-    ? times(rows, (i) => rows - 1 - i)
-    : times(rows, (i) => i);
-
-  for (let seatIndex = 0; seatIndex < maxSeats; seatIndex++) {
-    for (const rowIndex of rowOrder) {
-      const seat = seatMatrix[rowIndex][seatIndex];
-      if (seat) {
-        seat.radialIdx = radialCounter++;
-      }
-    }
-  }
+  setRadialIdx(layout, config);
 
   return layout;
 }

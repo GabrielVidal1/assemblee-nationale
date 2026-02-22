@@ -1,11 +1,9 @@
 import { createRoot } from "react-dom/client";
-import { HemicycleWithAislesPlayground } from "./components/HemicycleWithAislesPlayground";
+import { HemicycleWithAislesPlayground } from "./components/HemicyclePlayground";
 import "./style.css";
 
-const App = () => (
-  <div>
-    <HemicycleWithAislesPlayground />
-  </div>
-);
+const App = () => {
+  return <HemicycleWithAislesPlayground />;
+};
 
 createRoot(document.getElementById("app")!).render(<App />);

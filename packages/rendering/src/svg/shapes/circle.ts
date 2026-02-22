@@ -5,6 +5,7 @@ export const circularSeatPath: SvgPathGenerator = ({
   outerR,
   angle1Rad,
   angle2Rad,
+  radius: radiusParam,
 }) => {
   const delta = Math.abs(angle2Rad - angle1Rad);
   const midAngle = (angle1Rad + angle2Rad) / 2;
@@ -16,7 +17,7 @@ export const circularSeatPath: SvgPathGenerator = ({
   // angular limit
   const angularLimit = r * Math.sin(delta / 2);
 
-  const radius = Math.min(radialLimit, angularLimit);
+  const radius = radiusParam ?? Math.min(radialLimit, angularLimit);
 
   const cx = r * Math.cos(midAngle);
   const cy = r * Math.sin(midAngle);

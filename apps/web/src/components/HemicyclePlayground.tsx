@@ -1,9 +1,4 @@
-import {
-  Hemicycle,
-  HemicycleData,
-  randomColor,
-  SeatShape,
-} from "@hemicycle/core";
+import { Hemicycle, HemicycleData, SeatShape } from "@hemicycle/react";
 import { InputNumber, Slider, Tooltip } from "antd";
 import React, { useMemo, useState } from "react";
 
@@ -76,19 +71,21 @@ const ControlRow: React.FC<ControlRowProps> = ({
 
 // ─── Pill Toggle ──────────────────────────────────────────────────────────────
 interface PillToggleProps {
+  title?: string;
   options: { label: string; value: string }[];
   value: string;
   onChange: (v: string) => void;
 }
 
 const PillToggle: React.FC<PillToggleProps> = ({
+  title,
   options,
   value,
   onChange,
 }) => (
   <div className="flex items-center gap-3 py-1.5">
     <span className="w-32 shrink-0 text-[11px] font-medium text-slate-500 text-right">
-      Seat Shape
+      {title}
     </span>
     <div className="flex gap-1 bg-slate-100 p-0.5 rounded-lg">
       {options.map((opt) => (
@@ -121,17 +118,23 @@ export const HemicycleWithAislesPlayground: React.FC = () => {
   const [totalSeats, setTotalSeats] = useState(600);
   const [seatMargin, setSeatMargin] = useState(1);
   const [shape, setShape] = useState<SeatShape>("arc");
-  const [seatBorderRadius, setSeatBorderRadius] = useState(0.5);
+  const [seatBorderRadius, setSeatBorderRadius] = useState(0.5); // for arc and rect shapes
+  const [radius, setRadius] = useState(1.5); // for circle shape
+
+  const [ordering, setOrdering] = useState<"row" | "radial">("row");
   // Aisles
-  const [aisleNumber, setAisleNumber] = useState(7);
+  const [aisleNumber, setAisleNumber] = useState(5);
   const [aisleWidth, setAisleWidth] = useState(4);
+  const [arcAisleNumber, setArcAisleNumber] = useState(0);
+  const [arcAisleWidth, setArcAisleWidth] = useState(4);
 
   const data = useMemo(() => {
     return new Array(totalSeats).fill(0).map((_, idx) => {
       const d: HemicycleData = {
-        id: `id-${idx}`,
         idx: idx,
-        color: randomColor(idx),
+        seatConfig: {
+          color: `hsl(${(idx * 360) / totalSeats}, 70%, 50%)`,
+        },
       };
       return d;
     });
@@ -156,14 +159,14 @@ export const HemicycleWithAislesPlayground: React.FC = () => {
             label="Inner Radius"
             value={innerRadius}
             min={0}
-            max={200}
+            max={outerRadius - 10}
             step={1}
             onChange={setInnerRadius}
           />
           <ControlRow
             label="Outer Radius"
             value={outerRadius}
-            min={10}
+            min={innerRadius + 10}
             max={300}
             step={1}
             onChange={setOuterRadius}
@@ -185,28 +188,9 @@ export const HemicycleWithAislesPlayground: React.FC = () => {
             onChange={setRowMargin}
           />
 
-          <SectionLabel>Aisles</SectionLabel>
-          <ControlRow
-            label="Aisle Count"
-            value={aisleNumber}
-            min={0}
-            max={10}
-            step={1}
-            onChange={setAisleNumber}
-          />
-          {aisleNumber > 0 && (
-            <ControlRow
-              label="Aisle Width °"
-              value={aisleWidth}
-              min={1}
-              max={20}
-              step={0.5}
-              onChange={setAisleWidth}
-            />
-          )}
-
           <SectionLabel>Seats</SectionLabel>
           <PillToggle
+            title="Seat Shape"
             value={shape}
             onChange={(v) => setShape(v as SeatShape)}
             options={[
@@ -231,7 +215,7 @@ export const HemicycleWithAislesPlayground: React.FC = () => {
             step={0.5}
             onChange={setSeatMargin}
           />
-          {shape !== "circle" && (
+          {shape !== "circle" ? (
             <ControlRow
               label="Border Radius"
               value={seatBorderRadius}
@@ -240,7 +224,60 @@ export const HemicycleWithAislesPlayground: React.FC = () => {
               step={0.1}
               onChange={setSeatBorderRadius}
             />
+          ) : (
+            <ControlRow
+              label="Seat Radius"
+              value={radius}
+              min={0.5}
+              max={3}
+              step={0.1}
+              onChange={setRadius}
+            />
           )}
+          <PillToggle
+            title="Seats ordering"
+            value={ordering}
+            onChange={(v) => setOrdering(v as "row" | "radial")}
+            options={[
+              { label: "Row", value: "row" },
+              { label: "Radial", value: "radial" },
+            ]}
+          />
+
+          <SectionLabel>Aisles</SectionLabel>
+
+          <ControlRow
+            label="Radial Aisle Number"
+            value={aisleNumber}
+            min={0}
+            max={5}
+            step={1}
+            onChange={setAisleNumber}
+          />
+          <ControlRow
+            label="Radial Aisle Width"
+            value={aisleWidth}
+            min={0}
+            max={20}
+            step={0.5}
+            onChange={setAisleWidth}
+          />
+          <ControlRow
+            label="Arc Aisle Number"
+            value={arcAisleNumber}
+            min={0}
+            max={5}
+            step={1}
+            onChange={setArcAisleNumber}
+          />
+          <ControlRow
+            label="Arc Aisle Width"
+            value={arcAisleWidth}
+            min={0}
+            max={20}
+            step={0.5}
+            onChange={setArcAisleWidth}
+          />
         </div>
       </aside>
 
@@ -258,7 +295,7 @@ export const HemicycleWithAislesPlayground: React.FC = () => {
 
         {/* Hemicycle canvas */}
         <div className="relative z-10 w-full h-full flex items-center justify-center">
-          <Hemicycle.WithAisles
+          <Hemicycle
             rows={rows}
             innerRadius={innerRadius}
             outerRadius={outerRadius}
@@ -266,9 +303,15 @@ export const HemicycleWithAislesPlayground: React.FC = () => {
             rowMargin={rowMargin}
             data={data}
             totalSeats={totalSeats}
+            seatMargin={seatMargin}
+            orderBy={ordering}
+            aislesCount={aisleNumber}
+            aislesWidth={aisleWidth}
+            arcAislesCount={arcAisleNumber}
+            arcAislesWidth={arcAisleWidth}
             seatConfig={{
-              seatMargin: seatMargin,
               shape: shape,
+              radius: shape === "circle" ? radius : undefined,
               borderRadius: seatBorderRadius,
               wrapper: (content, data) => (
                 <Tooltip title={`Seat ${data?.idx}`}>{content}</Tooltip>
@@ -277,8 +320,6 @@ export const HemicycleWithAislesPlayground: React.FC = () => {
                 style: { cursor: "pointer", pointerEvents: "all" },
               },
             }}
-            aisleNumber={aisleNumber}
-            aisleWidth={aisleWidth}
           />
         </div>
       </main>

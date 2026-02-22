@@ -4,6 +4,11 @@
     "src"
   ],
   "compilerOptions": {
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@hemicycle/react": [
+        "../../packages/react/src/index.ts"
+      ],
+    }
   }
 }

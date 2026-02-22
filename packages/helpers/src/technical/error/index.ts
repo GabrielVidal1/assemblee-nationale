@@ -8,8 +8,11 @@ export class HemicycleError extends Error {
 }
 
 export class HemicycleParamValidationError extends HemicycleError {
-  constructor(paramName: string, reason: string) {
-    super(`Invalid parameter value "${paramName}": ${reason}`);
+  constructor(paramName: string | string[], reason: string) {
+    const paramNames = Array.isArray(paramName)
+      ? paramName.join(", ")
+      : paramName;
+    super(`Invalid parameter value "${paramNames}": ${reason}`);
     this.name = "HemicycleParamValidationError";
   }
 }

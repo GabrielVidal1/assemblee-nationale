@@ -1,11 +1,12 @@
-import { HemicycleConfig as BaseHemicycleConfig } from "@hemicycle/core";
+import * as Core from "@hemicycle/core";
 import { SeatConfig } from "./seatConfig";
 
-export type HemicycleConfig = BaseHemicycleConfig & {
-  width: number;
-  height: number;
+export type HemicycleConfig<SCT extends SeatConfig = SeatConfig> =
+  Core.HemicycleConfig & {
+    width: number | string;
+    height: number | string;
 
-  seatConfig: SeatConfig;
+    seatConfig: SCT;
 
-  hideEmptySeats?: boolean;
-};
+    hideEmptySeats?: boolean;
+  };

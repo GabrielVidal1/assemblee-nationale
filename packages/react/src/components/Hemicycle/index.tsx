@@ -1,53 +1,43 @@
-import { Hemicycle } from "@hemicycle/vanilla";
-import { useEffect, useMemo, useRef } from "react";
-import { HemicycleProps } from "./types";
+import * as Vanilla from "@hemicycle/vanilla";
+import { memo } from "react";
+import { HemicycleProps, SeatConfig } from "./types";
+export type { HemicycleData, HemicycleProps } from "./types";
 
 const HemicycleComponent = <T extends object = object>({
-  data,
+  data = [],
+  svgProps,
   ...props
 }: HemicycleProps<T>) => {
-  const hemicycleRef = useRef<Hemicycle<T> | null>(new Hemicycle<T>(props));
+  const hemicycle = new Vanilla.Hemicycle<T, SeatConfig>(props);
+  hemicycle.updateData(data);
+  const seatData = hemicycle.getSeatData();
 
-  useEffect(() => {
-    if (hemicycleRef.current) {
-      hemicycleRef.current.updateConfig(props);
-    }
-  }, [props]);
-
-  useEffect(() => {
-    if (!hemicycleRef.current) return;
-    hemicycleRef.current.updateData(data);
-
-    return () => hemicycleRef?.current?.cleanUp();
-  }, [data]);
-
-  const seatData = useMemo(
-    () => hemicycleRef.current?.getSeatData() ?? [],
-    [data],
-  );
+  const { width, height } = hemicycle.getConfig() ?? {};
+  const viewBox = hemicycle.getViewBox();
 
   return (
     <svg
-      ref={(el) => {
-        if (el && hemicycleRef.current) {
-          hemicycleRef.current.render(el);
-        }
-      }}
       style={{ display: "block" }}
-      width={props.width ?? "100%"}
-      height={props.height ?? "100%"}
+      width={width}
+      height={height}
+      viewBox={viewBox}
+      {...svgProps}
     >
-      {seatData.map(({ seatConfig }, idx) => {
-        return (
+      {seatData.map((data, idx) => {
+        const { seatConfig } = data;
+        const wrapper = seatConfig.wrapper ?? ((content) => content);
+        return wrapper(
           <path
             key={idx}
             d={seatConfig.path}
             fill={seatConfig.color ?? "lightgray"}
-          />
+            {...seatConfig.props}
+          />,
+          data,
         );
       })}
     </svg>
   );
 };
 
-export { HemicycleComponent as Hemicycle };
+export const Hemicycle = memo(HemicycleComponent);

@@ -13,12 +13,11 @@
   },
   "scripts": {
     "transform-data": "tsx transform.ts",
-    "dev": "NODE_ENV=development tsup --watch",
-    "build": "tsup",
+    "dev": "NODE_ENV=development tsdown --watch",
+    "build": "tsdown",
     "lint": "eslint \"**/*.ts\""
   },
   "devDependencies": {
-    "tsup": "^8.0.0",
     "tsx": "^4.21.0",
     "typescript": "5.5.4"
   }

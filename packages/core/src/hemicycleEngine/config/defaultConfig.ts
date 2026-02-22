@@ -12,10 +12,12 @@ export const DEFAULT_HEMICYCLE_CONFIG: HemicycleConfig = {
   rowMargin: 1,
   totalSeats: 100,
   mirror: false,
-  seatConfig: {
-    seatMargin: 1,
-    orderBy: "row",
-  },
+  seatMargin: 1,
+  orderBy: "row",
+
+  // aisles
   arcAislesCount: 0,
   arcAislesWidth: 2,
+  aislesCount: 0,
+  aislesWidth: 2,
 };
