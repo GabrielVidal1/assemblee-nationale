@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { HemicyclePlayground } from "./pages/HemicyclePlayground";
@@ -16,7 +17,12 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Analytics />
+    </>
+  );
 };
 
 createRoot(document.getElementById("app")!).render(<App />);
