@@ -273,7 +273,7 @@ export const HemicyclePlayground: React.FC = () => {
       <Navbar />
       <div className="flex bg-black font-sans h-0 flex-1">
         {/* ── Controls Panel ───────────────────────────────────────────── */}
-        <aside className="w-[30rem] shrink-0 bg-black border-r border-white/10 flex flex-col overflow-scroll">
+        <aside className="w-120 shrink-0 bg-black border-r border-white/10 flex flex-col overflow-scroll">
           {/* Scrollable controls */}
           <div className="flex-1 overflow-y-auto px-5 py-6 overscroll-contain scrollbar-thin">
             <SectionLabel>Layout</SectionLabel>
