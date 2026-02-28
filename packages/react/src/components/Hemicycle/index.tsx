@@ -1,4 +1,3 @@
-import { sum } from "@hemicycle/helpers";
 import * as Vanilla from "@hemicycle/vanilla";
 import { memo, useMemo } from "react";
 import { HemicycleProps, SeatConfig } from "./types";
@@ -12,7 +11,7 @@ const HemicycleComponent = <T extends object = object>({
 }: HemicycleProps<T>) => {
   const computedTotalSeats = useMemo(() => {
     if (groups) {
-      return sum(groups.map((g) => g.numberOfSeats));
+      return groups.reduce((sum, group) => sum + (group.numberOfSeats ?? 0), 0);
     }
     return props.totalSeats ?? data?.length ?? 0;
   }, [data, groups]);

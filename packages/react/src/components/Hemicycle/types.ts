@@ -32,7 +32,7 @@ export type HemicycleProps<T extends object = object> = Partial<
 };
 
 export type ComputedSeatData<T extends object = object> =
-  Vanilla.WithSeatConfig<
+  Vanilla.WithRequiredSeatConfig<
     Core.SeatData<T>,
     Vanilla.ComputedSeatConfig<SeatConfig<T>>
   >;
