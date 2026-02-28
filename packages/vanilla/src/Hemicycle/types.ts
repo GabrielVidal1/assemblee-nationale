@@ -5,13 +5,20 @@ export type WithSeatConfig<
   T extends object = object,
   SCT extends SeatConfig = SeatConfig,
 > = T & {
+  seatConfig?: SCT;
+};
+
+export type WithRequiredSeatConfig<
+  T extends object = object,
+  SCT extends SeatConfig = SeatConfig,
+> = T & {
   seatConfig: SCT;
 };
 
 export type ComputedSeatData<
   T extends object = object,
   SCT extends SeatConfig = SeatConfig,
-> = WithSeatConfig<Core.SeatData<T>, ComputedSeatConfig<SCT>>;
+> = WithRequiredSeatConfig<Core.SeatData<T>, ComputedSeatConfig<SCT>>;
 
 export type HemicycleData<
   T extends object = object,

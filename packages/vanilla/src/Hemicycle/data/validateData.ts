@@ -8,6 +8,6 @@ export function validateData<T extends object>(
   // Basic validation to check if each data item has either coordinates or idx
   data.forEach((item, index) => {
     const validator = getParamValidator("warn", `data[${index}].`);
-    validateSeatConfig(item.seatConfig, validator);
+    if (item.seatConfig) validateSeatConfig(item.seatConfig, validator);
   });
 }

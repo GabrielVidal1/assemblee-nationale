@@ -4,5 +4,5 @@ export interface HemicycleArcAisleConfig {
   /* Specifies the number of arc aisles to include, evenly spaced across the layout. */
   arcAislesCount: number;
   /* Specifies the interval (in rows) at which arc aisles should be placed. */
-  arcAislesEvery: number;
+  arcAislesEvery?: number;
 }
