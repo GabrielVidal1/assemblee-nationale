@@ -4,8 +4,9 @@ import {
   HemicycleConfig,
   validateConfig,
 } from "./config";
+import { groupsToData } from "./data/helpers";
 import { mapDataToSeats } from "./data/mapDataToSeats";
-import { HemicycleData, SeatData } from "./data/types";
+import { HemicycleData, HemicycleGroup, SeatData } from "./data/types";
 import { validateData } from "./data/validateData";
 import { computeSeatLayout, SeatLayout } from "./layout";
 import { computeSeatLayoutWithRadialAisles } from "./layout/computeSeatLayoutWithRadialAisles";
@@ -58,6 +59,10 @@ export class Hemicycle<T extends object = object> {
       data,
     });
     return this.seatData;
+  }
+
+  updateGroups(groups: HemicycleGroup<T>[]) {
+    return this.updateData(groupsToData(groups));
   }
 
   getSeatsLayout(): SeatLayout[] {

@@ -25,6 +25,11 @@ export type HemicycleData<
   SCT extends SeatConfig = SeatConfig,
 > = Core.HemicycleData<WithSeatConfig<T, SCT>>;
 
+export type HemicycleGroup<
+  T extends object = object,
+  SCT extends SeatConfig = SeatConfig,
+> = Core.HemicycleGroup<T> & WithSeatConfig<T, SCT>;
+
 export type HemicycleEngine<
   T extends object = object,
   SCT extends SeatConfig = SeatConfig,

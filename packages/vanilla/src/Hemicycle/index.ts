@@ -1,4 +1,5 @@
 import * as Core from "@hemicycle/core";
+import { groupsToData } from "@hemicycle/core";
 import { merge } from "@hemicycle/helpers";
 import { computeViewBox, svgPathGenerators } from "@hemicycle/rendering";
 import { HemicycleConfig } from "./config";
@@ -12,6 +13,7 @@ import {
   ComputedSeatData,
   HemicycleData,
   HemicycleEngine,
+  HemicycleGroup,
   WithSeatConfig,
 } from "./types";
 
@@ -73,6 +75,10 @@ export class Hemicycle<
       };
       return res;
     });
+  }
+
+  updateGroups(groups: HemicycleGroup<T, SCT>[]) {
+    return this.updateData(groupsToData(groups));
   }
 
   getSeatData() {

@@ -21,6 +21,10 @@ export type HemicyclePosition =
 
 export type HemicycleData<T extends object = object> = T & HemicyclePosition;
 
+export type HemicycleGroup<T extends object = object> = {
+  numberOfSeats: number;
+} & T;
+
 /** Combined type for a seat, including both layout, style and associated data. */
 export type SeatData<
   T extends object = object,

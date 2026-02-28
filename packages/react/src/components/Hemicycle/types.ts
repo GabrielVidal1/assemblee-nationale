@@ -19,10 +19,15 @@ export type HemicycleData<T extends object = object> = Core.HemicycleData<
   Vanilla.WithSeatConfig<T, SeatConfig<T>>
 >;
 
+export type HemicycleGroup<T extends object = object> = Core.HemicycleGroup<
+  Vanilla.WithSeatConfig<T, SeatConfig<T>>
+>;
+
 export type HemicycleProps<T extends object = object> = Partial<
   Vanilla.HemicycleConfig<SeatConfig<T>>
 > & {
   data?: HemicycleData<T>[];
+  groups?: HemicycleGroup<T>[];
   svgProps?: React.SVGProps<SVGSVGElement>;
 };
 
