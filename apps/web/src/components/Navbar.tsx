@@ -44,14 +44,14 @@ export default function Navbar() {
             <span className="mix-blend-difference">Playground</span>
           </a>
 
-          <a
+          {/* <a
             href="https://docs.hemicycle.dev"
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm font-mono px-4 py-1.5 bg-white text-black hover:bg-white/80 transition-colors duration-150 flex items-center gap-2"
           >
             <BookOpen size={16} /> Docs
-          </a>
+          </a> */}
         </div>
 
         {/* Mobile Menu Button */}
